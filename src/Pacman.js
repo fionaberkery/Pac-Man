@@ -11,6 +11,9 @@ class PacMan {
         this.currentMovingDirection = null
         this.requestedMovingDirection = null
 
+        this.pacManAnimationTimerDefault = 10
+        this.pacManAnimationTimer = null
+
         document.addEventListener("keydown", this.#keydown)
 
         this.#loadPacManImages()
@@ -19,6 +22,7 @@ class PacMan {
 draw(ctx){
 
     this.#move()
+    this.#animate()
 
     ctx.drawImage(
         this.pacManImages[this.pacManImageIndex], 
@@ -102,7 +106,15 @@ draw(ctx){
             this.currentMovingDirection
             )
             ) {
+                this.pacManAnimationTimer = null
+                this.pacManImageIndex = 1
                 return
+            }
+            else if(
+                this.currentMovingDirection != null && 
+                this.pacManAnimationTimer == null
+            ) {
+                this.pacManAnimationTimer = this.pacManAnimationTimerDefault
             }
 
     switch(this.currentMovingDirection){
@@ -129,6 +141,19 @@ draw(ctx){
         break 
     }
 
+}
+
+#animate() {
+    if(this.pacManAnimationTimer == null){
+        return
+    }
+    this.pacManAnimationTimer--
+    if(this.pacManAnimationTimer == 0){
+        this.pacManAnimationTimer = this.pacManAnimationTimerDefault
+        this.pacManImageIndex++
+        if(this.pacManImageIndex == this.pacManImages.length)
+            this.pacManImageIndex = 0
+    }
 }
 
 }
